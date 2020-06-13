@@ -107,7 +107,10 @@
 }
 
 .product{
-    padding:5px; 
+    display: grid;
+    grid-template-rows: 200px auto 200px;
+    grid-row-gap: 20px 20px;
+
 }
 
 #promo{
@@ -115,4 +118,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.eight{
+    display: grid;
+    grid-template-columns: 300px auto;
+    grid-template-rows: 300px;
 }
