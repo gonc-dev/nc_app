@@ -1,0 +1,76 @@
+{% extends 'window.html' %}
+{% load static %}
+{% block contents %}
+<div class='bg-image'>
+
+</div>
+<section id="showcase">
+    <div class="showcase-text-container">
+        <h1> Be Everything and More</h1>
+        <div class="search-box">
+            <i class="fa fa-search fa-2x" aria-hidden="true"></i>
+            <input type="text" class="search-input" placeholder="Search...">
+        </div>
+    </div>
+</section>
+<section id="products">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 col-sm-12 departments">
+                <h3 id='departments'> Departments </h3>
+                <ul class="department-list">
+                    <li><i class="fa fa-angle-right" aria-hidden="true"> </i> Men's Fashion</li>
+                    <li><i class="fa fa-angle-right" aria-hidden="true">  </i> Women's Fashion</li>
+                    <li><i class="fa fa-angle-right" aria-hidden="true">  </i> Clothing</li>
+                    <li><i class="fa fa-angle-right" aria-hidden="true">  </i> Books and Education</li>
+                    <li><i class="fa fa-angle-right" aria-hidden="true">  </i> Groceries</li>
+                    <li><i class="fa fa-angle-right" aria-hidden="true">  </i> Stationary</li>
+                </ul>
+                
+            </div>
+
+            <div class='col-md-9 col-sm-12' id="best-sellers">
+                <h2>Best Sellers</h2>
+                <div class='card-deck'>
+                    <div class="card best-seller-card">
+                    <img src="{% static 'app/images/cushion.jpeg' %}" alt="" class="card-img-top">
+                    <div class="card-body ">
+                        <p class='best-seller-description'>Throw Rug</p>
+                        <p class='best-seller-price'><b>$22.00</b></p>
+                        <button class="btn">Add to Basket</button>
+                    </div>
+                </div>
+                <div class="card best-seller-card">
+                    <img src="{% static 'app/images/seat.jpg' %}" alt="" class="card-img-top">
+                    <div class="card-body ">
+                        <p class='best-seller-description'>Camisole</p>
+                        <p class='best-seller-price'><b>$22.00</b></p>
+                        <button class="btn">Add to Basket</button>
+                    </div>
+                </div>
+                <div class="card best-seller-card">
+                    <img src="{% static 'app/images/throw.jpeg' %}" alt="throw" class="card-img-top">
+                    <div class="card-body ">
+                        <p class='best-seller-description'>Rib Seat Pad</p>
+                        <p class='best-seller-price'><b>$22.00</b></p>
+                        <button class="btn">Add to Basket</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="promo">
+
+    <div class="promo-msg">
+        <h3>SPECIAL</h3>
+        <h1>Up To 50% Off!</h1>
+        <h3>The Latest Trends</h3>
+        <a href="#" class="btn btn-lg btn-block">View Collection</a>
+    </div>
+    
+</section>
+
+
+{% endblock contents %}

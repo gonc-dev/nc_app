@@ -1,0 +1,255 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+}
+
+.nc-nav{
+    height:60px;
+    width:100%;
+    background-color:white;
+    box-shadow:0px 2px 4px #ccc;
+    display:flex;
+    flex-direction: row;
+    position: sticky;
+    top: 0px;
+    z-index: 1000;
+}
+
+.nc-nav-hero{
+    width:200px;
+    flex:0;
+    display:flex;
+    justify-content: center;
+    align-items:center;
+    height:100%;
+
+}
+
+#nc-nav-button {
+    display: none
+}
+
+.nc-nav-content{
+    flex:1;
+    height:100%;
+}
+
+.nc-nav-items{
+    display:flex;
+    flex-direction:row;
+    height:100%;
+    
+
+}
+
+.nc-nav-items li{
+    list-style-type:none;
+    margin:22px;
+}
+
+#showcase{
+    min-height:calc(100vh - 80px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('/static/app/images/bag.jpg');
+    background-size: cover;
+}
+
+.search-box {
+    box-shadow:0px 4px 8px #ccc;
+    width:100%;
+    border-radius: 5px;
+    padding:5px;
+    display: flex;
+    flex-direction: row;
+    background-color:white;
+}
+
+.search-input{
+    border:0px;
+    outline:0px;
+    height: 2rem;
+    width: 100%;
+    margin-left: 1.5rem;
+}
+
+.showcase-text-container h1{
+      text-shadow: 2px 2px  9px #000;
+      color:white;
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem;
+}
+
+.departments{
+    padding:2rem;
+}
+
+.department-list li{
+    list-style-type:none;
+    border-bottom:1px solid #aaa;
+    padding:0.5rem;
+    margin-bottom:2px;
+
+}
+
+#products {
+    padding: 6rem 4rem 0rem 4rem;
+    background-image: url('/static/app/images/pattern.png');
+    background-size: contain;
+    background-repeat: repeat;
+}
+
+.product{
+    display: grid;
+    grid-template-rows: 200px auto 200px;
+    grid-row-gap: 20px 20px;
+
+}
+
+#promo{
+    height: 100vh;
+    background: rgba(0,0,0,0.3);
+}
+.eight{
+    display: grid;
+    grid-template-columns: 300px auto;
+    grid-template-rows: 300px;
+}
+
+h3 {
+    font-family: 'Playfair Display', serif;
+}
+
+#departments {
+    border-left: 2px solid #222;
+    padding-left:2rem;
+}
+
+#best-sellers {
+    padding: 2rem;
+}
+
+#best-sellers h2 {
+    color: steelblue;
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+}
+
+.best-seller-card .card-body {
+    background-color: #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.best-seller-description {
+    font-family:  'Playfair Display', serif;
+
+}
+
+.best-seller-card button {
+    background-color: #888;
+    color:white;
+    font-weight: 700;
+    border-radius: 0px;
+}
+
+.bg-image {
+    background-image: url('/static/app/images/fashion.jpg');
+    z-index: -1;
+    left: 0px;
+    top: 0px;
+    height:100vh;
+    width: 100vw;
+    position: fixed;
+    background-size: cover;
+}
+
+.promo-msg {
+    background: transparent;
+    color:white;
+    margin: 0 6rem;
+    padding-top: 6rem;
+    width: fit-content;
+}
+
+.promo-msg a {
+    color:black;
+    background-color:white;
+    border-radius: 0px;
+}
+
+#footer {
+    background-image: url('/static/app/images/footer-pattern.png');
+    background-size:contain;
+    height: 30vh;
+    color:white;
+}
+
+#footer h4 {
+    font-family: 'Playfair Display', serif;
+    padding-left: 2rem;
+    border-left: 2px solid white;
+}
+
+#footer li {
+    list-style-type: none;
+}
+
+#footer > div {
+    background: rgba(0,0,0,0.7);
+    padding-top:4rem;
+    height: 100%;
+}
+
+@media(max-width: 575px){
+    #footer {
+        min-height: 30vh;
+        height: fit-content;
+    }
+
+    .nc-nav-content {
+        display: none;
+        height: calc(100vh - 60px);
+        width: 66vw;
+        top: 60px;
+        left: -132vw;
+        transition: left  0.3s ease-in;
+        position: absolute;
+        background-color: white;
+
+    }
+
+    .nc-nav-visible {
+        left: 0px;
+        display: block;
+    }
+
+    .nc-nav-items{
+        display:flex;
+        flex-direction:column;
+        height:100%;
+    }
+
+    .departments {
+        padding: 0px;
+    }
+
+    #nc-nav-button {
+        display: block;
+        width: 20%;
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .nc-nav-hero {
+        flex: 4;
+        width: 80%;
+    }
+
+
+}
