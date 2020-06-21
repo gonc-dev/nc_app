@@ -1,0 +1,34 @@
+{% extends 'window.html' %}
+
+
+{% block contents %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 col-sm-12">
+            <h3>{{object.name}}</h3>
+
+            <img src="{{object.image.url}}" alt="" class='img'>
+            
+            <p>{{object.description}}</p>
+
+            <h3 id='departments'> Filters </h3>
+            
+        </div>
+        <div class="col-md-9 col-sm-12">
+                {% if object.product_set.count == 0 %}
+                    <div class='alert alert-primary'>
+                        No products in this category.
+                    </div>
+                {% else %}
+            <div class="card-deck product-grid">
+                {% for product in object.product_set.all %}
+                    {% include "app/product_card.html" %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock contents %}

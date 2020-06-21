@@ -18,5 +18,34 @@
     </head>
     <body>
      {% block window %}{% endblock window %}
+     {% csrf_token %}
+    <!-- Button trigger modal -->
+    
+    
+    <!-- Modal -->
+    <div class="modal fade" id="product-modal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add <b id='product-name'></b> to cart</h5>
+                </div>
+                <div class="modal-body">
+                    <img src="" class='img' alt="No Product Image" id='product-image'>
+                    <div class="product-quantities">
+                        <button onclick='decrement("product-quantity")' class="btn btn-info"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                        <input id='product-quantity' type="number" value='1' class="form-control">
+                        <button onclick='increment("product-quantity")' class="btn btn-info"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                    </div>
+                    <input type="hidden" name="" id='product-id'>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" onclick='confirmAddToCart()' class="btn btn-primary">AddToCart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <script src=" {% static 'app/js/collections.js' %} "></script>
     </body>
 </html>
