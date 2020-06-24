@@ -2,7 +2,7 @@ from django.shortcuts import render,reverse, get_object_or_404
 from django.views.generic import TemplateView, DetailView, CreateView, FormView, UpdateView, ListView
 import os
 from app import models
-from app.utils import ContextMixin
+from app.utils import ContextMixin, ProductFilterMixin
 from app import forms
 from django.contrib.messages import info
 from django.contrib.auth import authenticate, login
@@ -10,6 +10,8 @@ from django.http import HttpResponseRedirect, JsonResponse
 from app.backends import EmailAuthBackend
 from django.db.models import Q
 import datetime
+from django_filters.views import FilterView
+from app.filters import ProductFilter
 
 # Create your views here.
 class Home(ContextMixin, TemplateView):
@@ -40,22 +42,46 @@ class ShoppingCartView(ContextMixin, TemplateView):
         return context
 
 
-class DepartmentView(ContextMixin, DetailView):
+class DepartmentView(ContextMixin, ProductFilterMixin, FilterView):
     model = models.Department
     template_name = os.path.join('app', 'department.html')
+    filterset_class = ProductFilter
+    
+    
+    def get_queryset(self):
+        dept = models.Department.objects.get(pk=self.kwargs['pk'])
+        _qs =  models.Product.objects.filter(category__department = dept)
+        return self.get_pg_qs(_qs)
+        
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        self.object = models.Department.objects.get(pk=self.kwargs['pk'])
+        
+        self.update_context(context)
+
+        context['object'] = self.object
         context['crumbs'] = [{'label': self.object.name, 'link': '#'}]
         return context
 
 
-class CategoryView(ContextMixin, DetailView):
+class CategoryView(ContextMixin, ProductFilterMixin, FilterView):
     model = models.Category
     template_name = os.path.join('app', 'category.html')
+    filterset_class = ProductFilter
+
+    def get_queryset(self):
+        obj = models.Category.objects.get(pk=self.kwargs['pk'])
+        _qs =  models.Product.objects.filter(category = obj)
+        return self.get_pg_qs(_qs)
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        self.object = models.Category.objects.get(pk=self.kwargs['pk'])
+        
+        self.update_context(context)
+
+        context['object'] = self.object
         context['crumbs'] = [{'label': self.object.department.name, 'link': reverse('app:department', kwargs={'pk': self.object.department.pk})}, {'label': self.object.name, 'link': '#'}]
         return context
 

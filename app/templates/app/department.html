@@ -1,5 +1,6 @@
 {% extends 'window.html' %}
 
+{% comment %} {% load app %} {% endcomment %}
 
 {% block contents %}
 
@@ -11,33 +12,44 @@
 
             <img src="{{object.image.url}}" alt="" class='img'>
 
+            <div class="card-body">
+                    <h4 class="card-title">Filters <i class="fa fa-filter" aria-hidden="true"></i></h4>
+                    <form method="get">
+                        {{ filter.form.as_p }}
+                        <input type="submit" />
+                    </form>
+                </div>
+    
+            <br>
             <h4 id='departments'> Categories </h4>
             <ul class="department-list">
                 {% if object.category_set.all.count == 0 %}
-                    <li class='list__category-item'>Department has no categories</li>
+                <li class='list__category-item'>Department has no categories</li>
                 {% endif %}
                 {% for category in object.category_set.all %}
-                    <li class='list__category-item'> <a href="{% url 'app:category' pk=category.pk %}">{{category}}</a></li>
+                <li class='list__category-item'> <a href="{% url 'app:category' pk=category.pk %}">{{category}}</a></li>
                 {% endfor %}
             </ul>
         </div>
         <div class="col-md-9 col-sm-12">
             <div class="padded">
-                {% if object.products.count == 0 %}
+                {% if filter.qs.count == 0 %}
                 <div class='alert alert-primary'>
                     No products in this department.
                 </div>
-            {% else %}
+                {% else %}
 
-            <div>
+                <div class='result-summary'>
 
-            </div>
-            <div class="card-deck product-grid">
-                {% for product in object.products %}
+                </div>
+                <div class="card-deck product-grid">
+                    {% for product in object_list %}
                     {% include "app/product_card.html" %}
-                {% endfor %}
-            </div>
-            {% endif %}
+                    {% endfor %}
+                </div>
+
+                {% include 'app/pagination.html' %}
+                {% endif %}
             </div>
         </div>
     </div>

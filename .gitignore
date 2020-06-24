@@ -1,2 +1,5 @@
-jquery*
-bootstrap*
+db.sqlite3
+media/
+nomies_collection/settings.py
+manage.py
+*.pyc
