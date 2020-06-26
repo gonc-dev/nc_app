@@ -661,6 +661,40 @@ body > .container {
 }
 
 
+.account-profile{
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+.list-group{
+    display:flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+.list-group-item.active{
+    z-index: 2;
+    background-color: steelblue;
+    border-color: steelblue;
+    color: #fff;
+}
+.list-group-item {
+    position: relative;
+    display: block;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,0.125);
+}
+
+.texts{
+    width: 100%;
+    line-height: 1.2;
+    color: steelblue;
+}
+
+
+
+
 
 @media(max-width: 575px){
     #footer {

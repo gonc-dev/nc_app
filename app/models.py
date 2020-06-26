@@ -151,6 +151,7 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     item =  models.ForeignKey('app.Product', on_delete=models.SET_NULL, null=True)
+    sku =  models.ForeignKey('app.SKU', on_delete=models.SET_NULL, null=True)
     quantity = models.IntegerField(default=1)
     subtotal = models.DecimalField(decimal_places=2, max_digits=24)
     discount = models.DecimalField(decimal_places=2, max_digits=6)

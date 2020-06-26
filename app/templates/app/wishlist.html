@@ -27,7 +27,7 @@
                     <button class='remove-wishlist-item-button'><i class="fa fa-times" aria-hidden="true"></i></button>
                     <h2>{{product.product.quantity_in_stock}}</h2>
                     <h5>IN STOCK</h5>
-                    <button class='btn btn-info'><i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to Cart</button>
+                    <button class='btn btn-info' onclick='openAddToCart({{product.pk}})'><i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to Cart</button>
                 </div>
             </div>
 

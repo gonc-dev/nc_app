@@ -191,6 +191,9 @@ def add_to_cart(request):
 
     product = get_object_or_404(models.Product, pk=request.POST['product'])
     orders = models.Order.objects.filter(customer=request.user, status='cart')
+
+    
+    
     if orders.exists():
         order = orders.first()
     else:
@@ -200,6 +203,7 @@ def add_to_cart(request):
             date=datetime.date.today(),
             shipping_cost=0
         )
+    
     models.OrderItem.objects.create(
         item=product,
         order=order,
@@ -208,6 +212,9 @@ def add_to_cart(request):
         discount =0
     )
     
+    #remove from wishlist
+    models.WishlistItem.objects.filter(product=product, customer=request.user).delete()
+
     return JsonResponse({'status': 'success'})
 
 def search(request):
@@ -235,13 +242,19 @@ def search(request):
 
     return JsonResponse({'results': results})
 
-def get_product_details(request, pk=None):
-    product = get_object_or_404(models.Product, pk=pk)
-    return JsonResponse({
-        "image": product.primary_photo_url,
-        "name": product.name,
-        "id": product.id
-    })
+# def get_product_details(request, pk=None):
+    # product = get_object_or_404(models.Product, pk=pk)
+    # data = 
+    # return JsonResponse({
+        # "image": product.primary_photo_url,
+        # "name": product.name,
+        # "id": product.id,
+        # 'skus': [{'name': 'value','id': i.id} for i in product.sku_set.all()],
+        # 'sku_attribute': product.sku_set.first().attribute
+    # })
 
 def checkout(request):
+    pass
+
+def remove_from_wishlist(request):
     pass
