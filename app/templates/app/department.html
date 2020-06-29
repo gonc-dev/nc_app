@@ -13,15 +13,15 @@
             <img src="{{object.image.url}}" alt="" class='img'>
 
             <div class="card-body">
-                    <h4 class="card-title">Filters <i class="fa fa-filter" aria-hidden="true"></i></h4>
-                    <form method="get">
+                    <h4 class="card-title filter-title">Filters <i class="fa fa-filter" aria-hidden="true"></i></h4>
+                    <form method="get" class='filter-form'>
                         {{ filter.form.as_p }}
                         <input type="submit" />
                     </form>
                 </div>
     
             <br>
-            <h4 id='departments'> Categories </h4>
+            <h4 id='departments' class='department-title'> Categories <i class="fa fa-caret-down" aria-hidden="true"></i> </h4>
             <ul class="department-list">
                 {% if object.category_set.all.count == 0 %}
                 <li class='list__category-item'>Department has no categories</li>

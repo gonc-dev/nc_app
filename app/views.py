@@ -18,9 +18,8 @@ class Home(ContextMixin, TemplateView):
     template_name = os.path.join('app', 'index.html')
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['featured'] = models.Product.objects.filter(featured=True)
-        #Best sellers
-        #get the most frequently ordered items
+        context['featured'] = models.Product.objects.filter(featured=True)[:3]
+        
 
         #if none, select at random
         
@@ -65,6 +64,29 @@ class DepartmentView(ContextMixin, ProductFilterMixin, FilterView):
         return context
 
 
+class DiscountView(ContextMixin, ListView):
+    ctxt = {
+        'image': '/static/app/images/discount.jpg',
+        'description': "Listed are the best deals available on Nomie's Collection!"
+                        " All products are massively discounted."
+    }
+    template_name = os.path.join('app', 'custom.html')
+
+    def get_queryset(self):
+        return models.Product.objects.filter(discount__gt=0)
+
+class FeaturedView(ContextMixin, ListView):
+    template_name = os.path.join('app', 'custom.html')
+    ctxt = {
+        'image': '/static/app/images/curator.jpg',
+        'description': 'Ever wanted a personal shopper?'
+                        ' This collection is made up of specially curated '
+                        'products from a wide range of categories'
+    }
+
+    def get_queryset(self):
+        return models.Product.objects.filter(featured=True)
+        
 class CategoryView(ContextMixin, ProductFilterMixin, FilterView):
     model = models.Category
     template_name = os.path.join('app', 'category.html')
@@ -105,6 +127,20 @@ class WishlistView(ContextMixin, TemplateView):
 
 class AccountView(ContextMixin, TemplateView):
     template_name = os.path.join('app', 'account.html')
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return super().get(request, *args, **kwargs)
+
+        return HttpResponseRedirect(reverse('app:login'))
+
+
+class AccountUpdateView(ContextMixin, UpdateView):
+    template_name = os.path.join('app', 'account_update.html')
+    form_class = forms.CustomerChangeForm
+
+    def get_object(self):
+        return self.request.user
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -178,12 +214,34 @@ def add_to_wishlist(request):
         return JsonResponse({'status': 'error'})
 
     product = get_object_or_404(models.Product, pk=request.POST['product'])
-    models.WishlistItem.objects.create(
-        product=product,
-        customer= request.user
-    )
+    if not models.WishlistItem.objects.filter(product=product, customer=request.user).exists():
+        models.WishlistItem.objects.create(
+            product=product,
+            customer= request.user
+        )
     
     return JsonResponse({'status': 'success'})
+
+def remove_from_wishlist(request):
+    item = get_object_or_404(models.WishlistItem, pk=request.POST['item'])
+    item.delete()
+    
+    return JsonResponse({'status': 'success'})
+
+
+def remove_from_cart(request):
+    item = get_object_or_404(models.OrderItem, pk=request.POST['item'])
+    order = item.order
+    item.delete()
+
+    order = models.Order.objects.get(pk=order.pk)
+
+    #return new totals 
+    return JsonResponse({
+        'subtotal': round(order.subtotal, 2),
+        'total': round(order.total, 2),
+        'tax': round(order.tax_amount, 2),
+        })
 
 def add_to_cart(request):
     if not request.user.is_authenticated:
@@ -191,7 +249,6 @@ def add_to_cart(request):
 
     product = get_object_or_404(models.Product, pk=request.POST['product'])
     orders = models.Order.objects.filter(customer=request.user, status='cart')
-
     
     
     if orders.exists():
@@ -203,14 +260,26 @@ def add_to_cart(request):
             date=datetime.date.today(),
             shipping_cost=0
         )
+
+    sku = models.SKU.objects.get(pk=request.POST['sku'])
+    qs = models.OrderItem.objects.filter(item=product,
+            order=order, sku=sku)
     
-    models.OrderItem.objects.create(
-        item=product,
-        order=order,
-        quantity= request.POST['quantity'],
-        subtotal = product.unit_price * request.POST['quantity'],
-        discount =0
-    )
+    if qs.exists():
+        order_item = qs.first()
+        order_item.quantity += int(request.POST['quantity'])
+        order_item.subtotal = order_item.quantity * product.unit_price
+        order_item.save()
+    
+    else:
+        models.OrderItem.objects.create(
+            item=product,
+            order=order,
+            quantity= request.POST['quantity'],
+            sku= sku,
+            subtotal = product.unit_price * int(request.POST['quantity']),
+            discount =0
+        )
     
     #remove from wishlist
     models.WishlistItem.objects.filter(product=product, customer=request.user).delete()
@@ -242,19 +311,17 @@ def search(request):
 
     return JsonResponse({'results': results})
 
-# def get_product_details(request, pk=None):
-    # product = get_object_or_404(models.Product, pk=pk)
-    # data = 
-    # return JsonResponse({
-        # "image": product.primary_photo_url,
-        # "name": product.name,
-        # "id": product.id,
-        # 'skus': [{'name': 'value','id': i.id} for i in product.sku_set.all()],
-        # 'sku_attribute': product.sku_set.first().attribute
-    # })
+def get_product_details(request, pk=None):
+    product = get_object_or_404(models.Product, pk=pk)
+    return JsonResponse({
+        "image": product.primary_photo_url,
+        "name": product.name,
+        "id": product.id,
+        'skus': [{'name': i.value ,'id': i.id} for i in product.sku_set.all()],
+        'sku_attribute': product.sku_set.first().attribute if \
+                            product.sku_set.all().count() > 0 else ''
+    })
 
 def checkout(request):
     pass
 
-def remove_from_wishlist(request):
-    pass

@@ -32,12 +32,16 @@
                 <div class="modal-body">
                     <img src="" class='img' alt="No Product Image" id='product-image'>
                     <div class="product-quantities">
-                        <button onclick='decrement("product-quantity")' class="btn btn-info"><i class="fa fa-minus" aria-hidden="true"></i></button>
-                        <input id='product-quantity' type="number" value='1' class="form-control">
-                        <button onclick='increment("product-quantity")' class="btn btn-info"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                        <button onclick='decrement("product-quantity")' class=" btn btn-info btn-sm"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                        <input id='product-quantity' type="number" value='1' class="form-control form-control-sm">
+                        <button onclick='increment("product-quantity")' class="btn btn-info btn-sm"><i class="fa fa-plus" aria-hidden="true"></i></button>
                     </div>
                     <h5 id='sku-title'></h5>
-                    <div id='sku-options'></div>
+                    <form action="">
+                        <div>
+                            <ul class="list-group" id='sku-options'></ul>
+                        </div>
+                    </form>
                     <input type="hidden" name="" id='product-id'>
                     <input type="hidden" name="" id='product-sku'>
                 </div>

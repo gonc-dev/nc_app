@@ -30,8 +30,8 @@
                     {% endif %}
                 {% endfor %}  
                 <li> <a href="/account"><i class="fa fa-user" aria-hidden="true"></i> MY ACCOUNT</a></li>
-                <li> <a href="/wishlist">WISHLIST - <span>0</span></a> </li>
-                <li><a href="/cart"><i class="fa fa-shopping-bag" aria-hidden="true"></i> <span class="badge  badge-default">0</span></a></li>
+                <li> <a href="/wishlist">WISHLIST - <span id='wishlist-count'>{{wishlist_count}}</span></a> </li>
+                <li><a href="/cart"><i class="fa fa-shopping-bag" aria-hidden="true"></i> <span id='cart-count' class="badge badge-primary">{{cart_count}}</span></a></li>
             </ul>
         </div>
         <div id="nc-nav-button">

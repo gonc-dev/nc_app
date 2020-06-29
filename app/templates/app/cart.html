@@ -7,14 +7,61 @@
     <div class="row">
         <div class="col-12 cart">
             
-    <table class="table">
+    <div id="cart-cards">
+        {% for item in cart.orderitem_set.all %}
+            <div class="card">
+                <img src="{{item.item.primary_photo_url}}" alt="" class="card-img-top">
+                <div class="card-body">
+                    <h5>{{item.item}}</h5>
+                    <h6>{{item.sku.value | upper}}</h6>
+
+                    <hr>
+
+                    <div class='mobile-cart'>
+                        <div>
+                            <h6>PRICE</h6>
+                            <p>{{item.item.unit_price | floatformat:2}}</p>
+                        </div>
+                        <div>
+                            <h6>QTY</h6>
+                            <p>{{item.quantity}}</p>
+                        </div>
+                        <div>
+                            <h6>SUBTOTAL</h6>
+                            <p>{{item.subtotal | floatformat:2}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td colspan='4' class='text-right'>Subtotal</td>
+                        <td class='text-right'  id='subtotal'>{{cart.subtotal | floatformat:2}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan='4' class='text-right'>Tax</td>
+                        <td class='text-right' id='tax'>{{cart.tax_amount | floatformat:2}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan='4' class='text-right'><h4>Total</h4></td>
+                        <td class='text-right'><h4 id='total'>{{cart.total | floatformat:2}}</h4></td>
+                    </tr>
+                </tbody>
+            </table>  
+        
+
+    </div>
+    <div  id='cart-table'>
+        <table class="table">
         <thead>
             <tr>
                 <th></th>
                 <th style='width:50%;'>Product</th>
                 <th>Unit Price</th>
                 <th>Quantity</th>
-                <th>Subtotal</th>
+                <th class='text-right'>Subtotal</th>
             </tr>
         </thead>
         <tbody>
@@ -24,19 +71,22 @@
                 </div>
             {% else %}
             {% for item in cart.orderitem_set.all %}
-            <tr>
+            <tr id='cart-item-{{item.pk}}'>
                 <td>
-                    <button class="btn"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    <button class="btn" onclick='removeFromCart({{item.pk}})'><i class="fa fa-times" aria-hidden="true"></i></button>
                 </td>
                 <td>
                     <div class='cart-card'>
                         <img src="{{item.item.primary_photo_url}}" alt="" class='cart-img'>
-                        <h4>{{item.item}}</h4>
+                        <div>
+                            <h5>{{item.item}}</h5>
+                            <h6>{{item.sku.value | upper}}</h6>
+                        </div>
                     </div>
                 </td>
-                <td>{{item.item.unit_price}}</td>
+                <td>{{item.item.unit_price | floatformat:2}}</td>
                 <td>{{item.quantity}}</td>
-                <td>{{item.subtotal}}</td>
+                <td class='text-right'>{{item.subtotal | floatformat:2}}</td>
             </tr>
             {% endfor %}
 
@@ -46,20 +96,25 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan='4'>Subtotal</td>
-                <td></td>
+                <td colspan='4' class='text-right'>Subtotal</td>
+                <td class='text-right'  id='subtotal'>{{cart.subtotal | floatformat:2}}</td>
             </tr>
             <tr>
-                <td colspan='4'>Tax</td>
-                <td></td>
+                <td colspan='4' class='text-right'>Tax</td>
+                <td class='text-right' id='tax'>{{cart.tax_amount | floatformat:2}}</td>
             </tr>
             <tr>
-                <td colspan='4'>Tax</td>Total
-                <td></td>
+                <td colspan='4' class='text-right'><h4>Total</h4></td>
+                <td class='text-right'><h4 id='total'>{{cart.total | floatformat:2}}</h4></td>
             </tr>
         </tfoot>
     </table>
-        <a href="" class='btn btn-info'>Proceed To Checkout</a>
+    </div>
+    
+    <div class='checkout-btn'>
+        <a href="" class='btn btn-info '>Proceed To Checkout</a>
+    </div>
+        
         </div>
     </div>
 </div>

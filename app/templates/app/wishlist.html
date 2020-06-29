@@ -9,7 +9,7 @@
         <div class="col-12">
             <h3>Wish List</h3>
         {% for product in items %}
-            <div class="wishlist-card">
+            <div class="wishlist-card" id='wishlist-item-{{product.pk}}'>
                 <img src="{{product.product.primary_photo_url}}" alt="item image">
                 <div class='wishlist-card-content'>
                     <h4>{{product.product}}</h4>
@@ -24,10 +24,10 @@
 
                 </div>
                 <div class='wishlist-card-actions'>
-                    <button class='remove-wishlist-item-button'><i class="fa fa-times" aria-hidden="true"></i></button>
+                    <button class='remove-wishlist-item-button' onclick='removeFromWishlist({{product.pk}})'><i class="fa fa-times" aria-hidden="true"></i></button>
                     <h2>{{product.product.quantity_in_stock}}</h2>
                     <h5>IN STOCK</h5>
-                    <button class='btn btn-info' onclick='openAddToCart({{product.pk}})'><i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to Cart</button>
+                    <button class='btn btn-info' onclick='openAddToCart({{product.product.pk}})'><i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to Cart</button>
                 </div>
             </div>
 

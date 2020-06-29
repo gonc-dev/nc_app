@@ -44,30 +44,31 @@
         <h3>SPECIAL</h3>
         <h1>Up To 50% Off!</h1>
         <h3>The Latest Trends</h3>
-        <a href="#" class="btn btn-lg btn-block">View Collection</a>
+        <a href="/discount/" class="btn btn-lg btn-block">View Collection</a>
     </div>
     
 </section>
 <section id="trend">
     <div class="container">
         <div class="row">
-            <div class="col-md-3 col-sm-12 container">
+            <div class="col-md-3 col-sm-12">
                 <h3>An Outfit</h3>
                 <h1> For All Occasions</h1>
                 <p>Get the perfect outfit for the occasion<br> Hurry while stocks last</p>
-                <a href="#" class="btn trend-link">See Collection</a>
+                <a href="/featured/" class="btn trend-link">See Collection</a>
             </div>
             <div class="col-md-9 col-sm-12">
                 <div id="featured-items" class="carousel slide" data-ride="carousel">
                     <ol class="carousel-indicators">
-                        <li data-target="#featured-items" data-slide-to="0" class="active"></li>
-                        <li data-target="#featured-items" data-slide-to="1"></li>
-                        <li data-target="#featured-items" data-slide-to="2"></li>
+                        {% for item in featured %}
+                            <li data-target="#featured-items" data-slide-to="{{forloop.counter0}}" {% if forloop.counter == 1 %} class="active"{% endif %}></li>
+                        {% endfor %}
+                        
                     </ol>
                     <div class="carousel-inner" role="listbox">
                         {% for item in featured %}
                         <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
-                            <img {% if forloop.counter == 1 %}src{% else %}data-src{% endif %}="{{item.primary_photo_url}}" alt="Featured slide">
+                            <img class='center-block' {% if forloop.counter == 1 %}src{% else %}data-src{% endif %}="{{item.primary_photo_url}}" alt="Featured slide">
                         </div>
                         {% endfor %}
                     </div>

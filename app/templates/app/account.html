@@ -13,121 +13,134 @@
 <section class="section-content account-profile">
     <div class="container">
         <div class="row">
-            <aside class="col-md 3">
+            <aside class="col-md-3 col-sm-12">
                 <ul class="list-group">
-                    <a href="#" class="list-group-item active"> Account Overview</a>
-                    <a href="#" class="list-group-item"> My Orders</a>
-                    <a href="#" class="list-group-item"> My Wishlist</a>
-                    <a href="#" class="list-group-item"> Returns and Refunds</a>
-                    <a href="#" class="list-group-item"> Received Orders</a>
+                    <li  data-sectionID="#account"  class="list-group-item account-nav active"> Account Overview</li>
+                    <li  data-sectionID="#orders" class="list-group-item account-nav"> My Orders</li>
+                    {% comment %} <a href="returns.html" class="list-group-item"> Returns and Refunds</a> {% endcomment %}
+                    <li  data-sectionID="#received-orders" class="list-group-item account-nav"> Received Orders</li>
+                    <li class="list-group-item" > <a href="/wishlist/">My Wishlist</a> </li>
+
                 </ul>
             </aside>
 
-            <main class="col-md-9">
-                <article class="card mb-3">
-                    <div class="card-body">
-                        <div class="texts">
-                            <strong> Mr. John Doe</strong>
-                            <br>
-                            " loginemail@gmail.com"
-                            <br>
-                            <a href="#">Edit</a>
-                        </div>
-                        <hr>
-
+            <main class="col-md-9 col-sm-12">
+                <article class="card account-container mb-3">
+                    <div class="card-body ">
+                        <figure class="icontext">
+                            <div class="texts">
+                                <strong>{{request.user.full_name}}</strong>
+                                <br>
+                                {{request.user.email}}
+                                <br>
+                                <a href="/update-account/">Edit</a>
+                            </div>
+                            <hr>
+                        </figure>
                         <p>
                             <i class="fa fa-map-marker text-muted"></i>
-                            "&nbsp; My address:"
+                            &nbsp; My address:
                             <br>
-                            " GonC City, Champion Street, Building GonC &nbsp;"
-                            <a href="#" class="btn-link"> Edit</a>
+                             {{request.user.address_line_1}}<br>
+                             {{request.user.address_line_2}}<br>
+                             {{request.user.city}}<br>
+                            <a href="/update-account/" class="btn-link"> Edit</a>
                         </p>
-                        <article class="card-group">
-                            <figure class="card-bg">
-                                <div>
-                                    <h5 class="card-title">00</h5>
-                                    <span>Orders</span>
-                                </div>
-                            </figure>
-                            <figure class="card-bg">
-                                <div>
-                                    <h5 class="card-title">00</h5>
-                                    <span>Wishlists</span>
-                                </div>
-                            </figure>
-                            <figure class="card-bg">
-                                <div>
-                                    <h5 class="card-title">00</h5>
-                                    <span>Awaiting Delivery</span>
-                                </div>
-                            </figure>
-                            <figure class="card-bg">
-                                <div>
-                                    <h5 class="card-title">00</h5>
-                                    <span>Delivered Items</span>
-                                </div>
-                            </figure>
-                        </article>
 
-                        <article class="card mb-3">
+                        <div id='account' class="card mb-3 account-section active-account-section">
                             <div class="card-body">
                                 <h5 class="card-title mb-4">Recent Orders</h5>
+                                <hr>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    {% for order in request.user.recent_orders %}
+                                        <div class="col-md">
                                         <figure class="itemside mb-3">
                                             <div class="aside">
-                                                <img src="#" alt="Item" class="border img-sm">
+                                                <img src="{{order.primary_img}}" alt="Item" class="border img-sm">
                                             </div>
-                                            <figcaption class="info">
+                                            <figcaption class="order-info">
                                                 <time class="text-muted">
                                                     <i class="fa fa-calendar-alt">
 
                                                     </i>
-                                                    "01.01.3000"
+                                                    {{order.date}}
                                                 </time>
-                                                <p>Item bought goes here</p>
-                                                <span class="text-warning">Pending</span>
+                                                <p>{{order.orderitem_set.all.count}} ITEMS BOUGHT</p>
+                                                {% if order.status == 'paid' %}
+                                                <span class="text-success">{{order.status}}</span>
+                                                {% elif order.status == 'shipped' %}
+                                                <span class="text-info">{{order.status}}</span>
+                                                {% elif order.status == 'received' %}
+                                                <span class="text-primary">{{order.status}}</span>
+                                                {% else %}
+                                                <span>{{order.status}}</span>
+                                                {% endif %}
                                             </figcaption>
                                         </figure>
                                     </div>
-                                    <div class="col-md-6">
-                                        <figure class="itemside mb-3">
-                                            <div class="aside">
-                                                <img src="#" alt="Item" class="border img-sm">
-                                            </div>
-                                            <figcaption class="info">
-                                                <time class="text-muted">
-                                                    <i class="fa fa-calendar-alt">
-
-                                                    </i>
-                                                    "01.01.3000"
-                                                </time>
-                                                <p>Item bought goes here</p>
-                                                <span class="text-success">Success</span>
-                                            </figcaption>
-                                        </figure>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <figure class="itemside mb-3">
-                                            <div class="aside">
-                                                <img src="#" alt="Item" class="border img-sm">
-                                            </div>
-                                            <figcaption class="info">
-                                                <time class="text-muted">
-                                                    <i class="fa fa-calendar-alt">
-
-                                                    </i>
-                                                    "01.01.3000"
-                                                </time>
-                                                <p>Item bought goes here</p>
-                                                <span class="text-warning">Pending</span>
-                                            </figcaption>
-                                        </figure>
-                                    </div>
+                                    {% endfor %}
                                 </div>
-                                <a href="#" class="btn btn-outline-primary"> See all orders</a>
+                                <a data-sectionID="#orders" class="btn btn-outline-primary account-nav"> See all orders</a>
                             </div>
-                        </article>
+                        </div>
+                        <div id="orders" class='account-section'>
+                        <h5>All Orders</h5>
+                            <hr>
+                            {% for order in request.user.order_set.all %}
+                                {% if order.status != 'cart' %}
+                                        <div class="col-md">
+                                        <figure class="itemside mb-3">
+                                            <div class="aside">
+                                                <img src="{{order.primary_img}}" alt="Item" class="border img-sm">
+                                            </div>
+                                            <figcaption class="order-info">
+                                                <time class="text-muted">
+                                                    <i class="fa fa-calendar-alt">
+
+                                                    </i>
+                                                    {{order.date}}
+                                                </time>
+                                                <p>{{order.orderitem_set.all.count}} ITEMS BOUGHT</p>
+                                                {% if order.status == 'paid' %}
+                                                <span class="text-success">{{order.status}}</span>
+                                                {% elif order.status == 'shipped' %}
+                                                <span class="text-info">{{order.status}}</span>
+                                                {% elif order.status == 'received' %}
+                                                <span class="text-primary">{{order.status}}</span>
+                                                {% else %}
+                                                <span>{{order.status}}</span>
+                                                {% endif %}
+                                            </figcaption>
+                                        </figure>
+                                        </div>
+                                {% endif %}
+                                {% endfor %}
+                        </div>
+
+                        <div id="received-orders" class='account-section'>
+                        <h5>Received Orders</h5>
+                        <hr>
+                            {% for order in request.user.order_set.all %}
+                                {% if order.status == 'received' %}
+                                        <div class="col-md">
+                                        <figure class="itemside mb-3">
+                                            <div class="aside">
+                                                <img src="{{order.primary_img}}" alt="Item" class="border img-sm">
+                                            </div>
+                                            <figcaption class="order-info">
+                                                <time class="text-muted">
+                                                    <i class="fa fa-calendar-alt">
+
+                                                    </i>
+                                                    {{order.date}}
+                                                </time>
+                                                <p>{{order.orderitem_set.all.count}} ITEMS BOUGHT</p>
+                                            </figcaption>
+                                        </figure>
+                                        </div>
+                                {% endif %}
+                                {% endfor %}
+                        </div>
 
 
                     </div>
@@ -137,7 +150,5 @@
             
         </div>
     </div>
-
-
 </section>
 {% endblock contents %}

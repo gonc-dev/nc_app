@@ -11,7 +11,7 @@ class CustomerChangeForm(UserChangeForm):
 
     class Meta:
         model = Customer
-        fields = ('username', 'email')
+        fields = ('first_name', 'last_name','username', 'email', 'address_line_1', 'address_line_2', 'cell_number', 'telephone_number',  'city')
 
 
 class LoginForm(forms.Form):

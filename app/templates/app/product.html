@@ -11,8 +11,18 @@
             <div class="row">
                 <div class="col-md-6 col-sm-12">
                     <div class='product-img'>
-                        <img src="{{object.primary_photo_url}}" class='img' alt="Image">
+                        <img id='main-product-img' src="{{object.primary_photo_url}}" class='img' alt="Image">
                     </div>
+                    {% if object.productimage_set.all.count > 1 %}
+                        <div class="product-img-gallery">
+                            {% for img in object.productimage_set.all %}
+                                <div id='product-img-{{img.pk}}' class='gallery-img'>
+                                    <img src="{{img.image.url}}" alt="Image">
+                                </div>
+                            {% endfor %}
+                        </div>        
+                    {% endif %}
+                    
                 </div>
                 <div class="col-md-6 col-sm-12">
                     <div class="product-sidebar">
@@ -30,16 +40,16 @@
                         <div>
                             <p><b>{{object.sku_set.first.attribute}}</b></p>
                             {% for sku in object.sku_set.all %}
-                                <p><input type="radio" name="sku" id="" >{{sku.value}}</p>
+                                <p><input type="radio" name="product_sku" id="" value="{{sku.pk}}" {% if forloop.counter == 1 %}checked{% endif %} >{{sku.value}}</p>
                             {% endfor %}
                         </div>
                     </div>
                     <hr>
                     <div class="basket-input">
-                        <button onclick='decrement("quantity")' class="btn"><i class="fa fa-minus" aria-hidden="true"></i></button>
-                        <input id='quantity' type="number" value='1' class="form-control">
-                        <button onclick='increment("quantity")' class="btn"><i class="fa fa-plus" aria-hidden="true"></i></button>
-                        <button onclick='pageAddToCart({{object.pk}})' class="btn btn-primary">ADD TO CART</button>
+                        <button onclick='decrement("quantity")' class="btn btn-sm"><i class="fa fa-minus" aria-hidden="true"></i></button>
+                        <input id='quantity' type="number" value='1' class="form-control form-control-sm">
+                        <button onclick='increment("quantity")' class="btn btn-sm"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                        <button onclick='pageAddToCart({{object.pk}})' class="btn btn-primary btn-sm">ADD TO CART</button>
                     </div>
                     <button onclick="addToWishlist({{object.pk}})"><i class="fa fa-heart-o" aria-hidden="true"></i> ADD TO WISHLIST</button>
                     </div>
@@ -56,8 +66,8 @@
             <div class="row">
                 <div class="col-12">
                     <h4>Related Products</h4>
-                    <div class="card-deck">
-                        {% for product in object.related_products %}
+                    <div class="related-products">
+                        {% for product in object.related_products.all %}
                             {% include "app/product_card.html" %}
                         {% endfor %}
                     </div>
@@ -68,9 +78,9 @@
                 <div class="col-12">
                     <div class="share-row">
                         <ul>
-                            <li><i class="fa fa-facebook fa-3x" aria-hidden="true"></i> FACEBOOK</li>
-                            <li><i class="fa fa-twitter fa-3x" aria-hidden="true"></i> TWITTER</li>
-                            <li><i class="fa fa-instagram fa-3x" aria-hidden="true"></i> INSTAGRAM</li>
+                            <li><i class="fa fa-facebook fa-3x" aria-hidden="true"></i> <span>FACEBOOK</span></li>
+                            <li><i class="fa fa-twitter fa-3x" aria-hidden="true"></i> <span>TWITTER</span></li>
+                            <li><i class="fa fa-instagram fa-3x" aria-hidden="true"></i> <span>INSTAGRAM</span></li>
                         </ul>
                     </div>
                 </div>

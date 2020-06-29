@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser 
-
+from decimal import Decimal as D
 
 CITY_CHOICES = [
         ('Harare', 'Harare'),
@@ -25,6 +25,13 @@ class Customer(AbstractUser):
     cell_number = models.CharField(max_length=256, blank=True, default="")
     city = models.CharField(max_length=256, blank=True, default="Harare", choices=CITY_CHOICES)
 
+    @property 
+    def recent_orders(self):
+        return self.order_set.exclude(status='cart').order_by('date').reverse()[:3]
+
+    @property 
+    def full_name(self):
+        return "%s %s" % (self.first_name, self.last_name)
 
     def __str__(self):
         return self.email
@@ -52,6 +59,16 @@ class AppSettings(models.Model):
         obj, created = cls.objects.get_or_create(pk=1)
         return obj
 
+class SKU(models.Model):
+    sku_id = models.CharField(max_length=64)
+    attribute = models.CharField(max_length=255)
+    value  = models.CharField(max_length=255)
+    product = models.ForeignKey('app.Product', on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.sku_id
+
 class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
@@ -60,6 +77,8 @@ class Product(models.Model):
     discount = models.DecimalField(max_digits=24, decimal_places=2)
     featured = models.BooleanField(default=False, blank=True, null=True)
     category = models.ForeignKey('app.Category', on_delete=models.SET_NULL, null=True)
+    sales_rank = models.IntegerField(default=0)
+    related_products = models.ManyToManyField('app.Product')
 
     @property
     def quantity_in_stock(self):
@@ -84,15 +103,15 @@ class Product(models.Model):
         
         return ''
 
-class SKU(models.Model):
-    sku_id = models.CharField(max_length=64)
-    attribute = models.CharField(max_length=255)
-    value  = models.CharField(max_length=255)
-    product = models.ForeignKey('app.Product', on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=0)
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.sku_set.all().count() == 0:
+            SKU.objects.create(sku_id= "PROD%s" % self.pk,
+                                attribute='Basic',
+                                value='Default',
+                                product=self,
+                                quantity=0)
 
-    def __str__(self):
-        return self.sku_id
 
 class ProductImage(models.Model):
     product = models.ForeignKey('app.Product', on_delete=models.CASCADE)
@@ -143,11 +162,27 @@ class Order(models.Model):
     shipping_cost = models.DecimalField(decimal_places=2, max_digits=24)
     tax = models.DecimalField(decimal_places=2, max_digits=24, default=14.5, )
 
-
+    @property
+    def primary_img(self):
+        if self.orderitem_set.first():
+            return self.orderitem_set.first().item.primary_photo_url
 
     def __str__(self):
         return "ORD%d" % self.id
 
+
+    @property
+    def subtotal(self):
+        return self.total - self.tax_amount
+
+
+    @property
+    def tax_amount(self):
+        return self.total * (self.tax /D(100.0))
+
+    @property
+    def total(self):
+        return sum(i.subtotal for i in self.orderitem_set.all())
 
 class OrderItem(models.Model):
     item =  models.ForeignKey('app.Product', on_delete=models.SET_NULL, null=True)
