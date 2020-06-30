@@ -78,7 +78,7 @@ class Product(models.Model):
     featured = models.BooleanField(default=False, blank=True, null=True)
     category = models.ForeignKey('app.Category', on_delete=models.SET_NULL, null=True)
     sales_rank = models.IntegerField(default=0)
-    related_products = models.ManyToManyField('app.Product')
+    related_products = models.ManyToManyField('app.Product', blank=True)
 
     @property
     def quantity_in_stock(self):
