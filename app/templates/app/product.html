@@ -28,11 +28,11 @@
                     <div class="product-sidebar">
                         <h3>{{object}}</h3>
                     {% if object.discount %}
-                        <h6><strike>{{currency}}{{object.unit_price}}</strike></h6>
-                        <h4>{{currency}}{{object.discounted_price}}<sup>{{object.discount}}% OFF!</sup></h4>
+                        <p class='card-text'><span class="old-price">{{currency}}{{object.unit_price}}</span><br>
+                        <strong class='new-price'>{{currency}}{{object.discounted_price}}<sup>{{object.discount}}% OFF!</sup></strong></p>
 
                     {% else %}
-                        <h4>{{currency}}{{object.unit_price}}</h4>
+                        <p class="card-text">{{currency}}{{object.unit_price}}</p>
                     {% endif %}
                     <hr>
                     <div>

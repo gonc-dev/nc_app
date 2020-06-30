@@ -14,6 +14,10 @@ class ContextMixin(object):
         context.update(self.ctxt)
         context['departments'] =Department.objects.all()
         context['currency'] ='$'
+        if self.ctxt.get('crumbs'):
+            context['crumb_title'] = self.ctxt['crumbs'][-1]['label']
+
+
         if self.request.user.is_authenticated:
             context['wishlist_count'] = models.WishlistItem.objects.filter(
                     customer=self.request.user).count()

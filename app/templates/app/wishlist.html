@@ -7,7 +7,11 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-            <h3>Wish List</h3>
+        {% if items.count == 0 %}
+            <div class="alert alert-primary">
+                Your wish list is empty. Browse our site and add some items!
+            </div>
+        {% endif %}
         {% for product in items %}
             <div class="wishlist-card" id='wishlist-item-{{product.pk}}'>
                 <img src="{{product.product.primary_photo_url}}" alt="item image">

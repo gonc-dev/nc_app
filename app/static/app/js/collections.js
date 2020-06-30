@@ -26,7 +26,6 @@ function search(element, results){
                     'url': '/search',
                     'data': {'text': input},
                     'success': function(data){
-                        console.log(data.results)
                         $('#' + results).empty()
                         data.results.map(function(result){
                             $('#' + results).append('<div><a href="'+ result.link +'">'+ result.name +'</a></div>')
@@ -40,12 +39,22 @@ function search(element, results){
     }
 }
 
+function openMessage(title, message){
+    $('#modal-title').text(title);
+    $('#modal-message').text(message);
+    $('#message-modal').addClass('modal-active');
+}
+
+
+function closeMessage(){
+    $('#message-modal').removeClass('modal-active');
+}
 
 $(document).ready(function(){
     search('search', 'search-results')
     search('nav-search', 'nav-search-results')
     $('.department-title').on('click', function(){
-        $('.department-list').toggleClass('mobile-active')
+        $('.department-list').toggleClass('mobile-only')
     })
 
     $('.filter-title').on('click', function(){
@@ -86,7 +95,7 @@ function addToWishlist(product){
             product: product
         },
         success: function(res){
-            console.log(res)
+            openMessage('Success', 'Item added to Wishlist')
         }
     })
 }
@@ -145,7 +154,7 @@ function removeFromCart(item){
             $('#tax').text(resp.tax)
             $('#subtotal').text(resp.subtotal)
             $('#total').text(resp.total)
-            alert('Item removed from cart successfully')
+            openMessage('Success', 'Item removed from cart.')
         }
     })
 }
@@ -159,7 +168,7 @@ function removeFromWishlist(item){
         },
         success: function(resp){
             $('#wishlist-item-' + item).remove();
-            alert('Item removed from wishlist successfully')
+            openMessage('Success', 'Item removed from wish list.')
         }
     })
 }
@@ -185,6 +194,7 @@ function addToCart(product, sku, quantity){
         },
         success: function(res){
             $('#product-modal').modal('hide');
+            openMessage('Success', 'Item added to Cart')
         }
     })
 }

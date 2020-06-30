@@ -5,13 +5,15 @@ from app import models
 from app.utils import ContextMixin, ProductFilterMixin
 from app import forms
 from django.contrib.messages import info
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, JsonResponse
 from app.backends import EmailAuthBackend
 from django.db.models import Q
 import datetime
 from django_filters.views import FilterView
 from app.filters import ProductFilter
+
+
 
 # Create your views here.
 class Home(ContextMixin, TemplateView):
@@ -61,6 +63,7 @@ class DepartmentView(ContextMixin, ProductFilterMixin, FilterView):
 
         context['object'] = self.object
         context['crumbs'] = [{'label': self.object.name, 'link': '#'}]
+        context['crumb_title'] = context['crumbs'][-1]['label']
         return context
 
 
@@ -105,10 +108,14 @@ class CategoryView(ContextMixin, ProductFilterMixin, FilterView):
 
         context['object'] = self.object
         context['crumbs'] = [{'label': self.object.department.name, 'link': reverse('app:department', kwargs={'pk': self.object.department.pk})}, {'label': self.object.name, 'link': '#'}]
+        context['crumb_title'] = context['crumbs'][-1]['label']
         return context
 
 
 class WishlistView(ContextMixin, TemplateView):
+    ctxt = {
+        'crumbs': [{'label': 'Wish List', 'link': '#'}]
+    }
     def get_context_data(self, **kwargs):
         context =  super().get_context_data(**kwargs)
 
@@ -127,6 +134,9 @@ class WishlistView(ContextMixin, TemplateView):
 
 class AccountView(ContextMixin, TemplateView):
     template_name = os.path.join('app', 'account.html')
+    ctxt = {
+        'crumbs': [{'label': 'My Account', 'link': '/account/'}]
+    }
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -136,6 +146,10 @@ class AccountView(ContextMixin, TemplateView):
 
 
 class AccountUpdateView(ContextMixin, UpdateView):
+    ctxt = {
+        'crumbs': [{'label': 'My Account', 'link': '/account/'}, {'label': 'Update Account Details', 'link': '#'}]
+    }
+    success_url = '/account/'
     template_name = os.path.join('app', 'account_update.html')
     form_class = forms.CustomerChangeForm
 
@@ -171,9 +185,14 @@ class ProductView(ContextMixin, DetailView):
                 'link': '#'
             }
         ]
+        context['crumb_title'] = context['crumbs'][-1]['label']
+
         return context
 
 class AboutView(ContextMixin, TemplateView):
+    ctxt = {
+        'crumbs': [{'label': 'About', 'link': '#'}]
+    }
     template_name = os.path.join('app', 'about.html')
 
 class FAQView(ContextMixin, TemplateView):
@@ -325,3 +344,6 @@ def get_product_details(request, pk=None):
 def checkout(request):
     pass
 
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect('/login/')

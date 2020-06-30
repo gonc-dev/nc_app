@@ -46,10 +46,23 @@
                     <input type="hidden" name="" id='product-sku'>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" onclick='confirmAddToCart()' class="btn btn-primary">AddToCart</button>
+                    <button type="button" class="btn" data-dismiss="modal">Cancel</button>
+                    <button type="button" onclick='confirmAddToCart()' class="btn btn-info">AddToCart</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div id="message-modal">
+        <div id="message-modal-body">
+            <div id="modal-header">
+                <button class="btn" onclick='closeMessage()'>
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+            <h3 id='modal-title'>Title</h3>
+            <hr>
+            <p id='modal-message'>Message</p>
         </div>
     </div>
 
