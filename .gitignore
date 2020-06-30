@@ -3,3 +3,4 @@ media/
 nomies_collection/settings.py
 manage.py
 *.pyc
+__pycache__/
