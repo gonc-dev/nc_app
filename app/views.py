@@ -205,7 +205,11 @@ class LoginView(FormView):
 
     def form_valid(self, form):
         resp = super().form_valid(form)
-        user = models.Customer.objects.get(email=form.cleaned_data['email'])
+        try:
+            user = models.Customer.objects.get(email=form.cleaned_data['email'])
+        except:
+            return HttpResponseRedirect('/login/')
+
         if user.check_password(form.cleaned_data['password']):
             login(self.request, user, backend='app.backends.EmailAuthBackend')
             return resp

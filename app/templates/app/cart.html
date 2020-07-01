@@ -12,6 +12,7 @@
             <div class="card">
                 <img src="{{item.item.primary_photo_url}}" alt="" class="card-img-top">
                 <div class="card-body">
+                    <button class="btn cart-button" onclick='removeFromCart({{item.pk}})'><i class="fa fa-times" aria-hidden="true"></i></button>
                     <h5>{{item.item}}</h5>
                     <h6>{{item.sku.value | upper}}</h6>
 

@@ -58,7 +58,15 @@ $(document).ready(function(){
     })
 
     $('.filter-title').on('click', function(){
-        $('.filter-form').toggleClass('mobile-active')
+        $('.filter-form').toggleClass('mobile-only')
+    })
+
+    $('.sign-up-form input[type="password"]').on('focus', function(){
+        $('.sign-up-form ul').show();
+    })
+
+    $('.sign-up-form input[type="password"]').on('blur', function(){
+        $('.sign-up-form ul').hide();
     })
 
     $('.gallery-img').on('click', function(evt){

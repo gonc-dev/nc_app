@@ -897,14 +897,51 @@ nav a {
     border: 1px solid var(--primary)
 }
 
+.helptext {
+    color: #bbb;
+    text-transform: capitalize;
+    font-size: .75rem;
+}
+
+.sign-up-form ul:not([class='errorlist']) {
+    display: none;
+    z-index: 100;
+    border-radius: 3px;
+    padding: 8px;
+    border: 1px solid crimson;
+    display: none;
+}
+
+.errorlist {
+    color: crimson;
+    text-transform: uppercase;
+}
+
+.sign-up-form li {
+    list-style-type: none;
+}
 
 /* mobile */
 
 @media(max-width: 575px){
     /* common */
+
+    .login-form {
+        width: 80vw;
+        right: 10vw;
+        top: 10vh;
+    }
+    
+    .sign-up-form {
+        width: 80vw;
+        right: 10vw;
+        top: 10vh;
+    }
+
+
     /* for toggling the filters and categories in mobile view */
-    .mobile-only {
-        display: block
+    form.mobile-only, ul.mobile-only, li.mobile-only {
+        display: block !important;
     }
 
     input.active {
@@ -980,6 +1017,18 @@ nav a {
         display: none;
     }
 
+    .breadcrumbs {
+        overflow-x: scroll;
+    }
+
+    .breadcrumbs h3{
+        display: none;
+    }
+
+    .breadcrumbs ul{
+        justify-content: flex-start;
+    }
+
     /* footer */
     #footer {
         min-height: 30vh;
@@ -1040,5 +1089,25 @@ nav a {
     
     div.cart-card {
         flex-direction: column;
+    }
+
+    .cart-cards .card-body {
+        position: relative;
+    }
+
+    .cart-remove-button {
+        position: absolute;
+        z-index: 1;
+        top: 0px;
+        right: 0px;
+    }
+
+    /* modal */
+
+    #message-modal-body{
+        height: 50vh;
+        left: 10vw;
+        top: 15vh;
+        width: 80vw;
     }
 }
