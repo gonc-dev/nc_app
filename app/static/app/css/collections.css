@@ -132,7 +132,7 @@ body > .container {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url('/static/app/images/bag.jpg');
+    background-image: url('/static/app/images/showcase1.jpg');
     background-size: cover;
 }
 
@@ -192,7 +192,7 @@ body > .container {
 }
 
 .bg-image {
-    background-image: url('/static/app/images/fashion.jpg');
+    background-image: url('/static/app/images/bg.jpg');
     z-index: -1;
     left: 0px;
     top: 0px;
