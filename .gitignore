@@ -4,3 +4,4 @@ nomies_collection/settings.py
 *.pyc
 __pycache__/
 env/
+manage.py
