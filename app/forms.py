@@ -9,6 +9,36 @@ from crispy_forms.layout import (HTML,
                                  Layout,
                                  Submit)
 
+class EmailForm(forms.Form):
+    email = forms.EmailField(required=True)
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        if not Customer.objects.filter(email=cleaned_data['email']).exists():
+            raise forms.ValidationError("The email entered does not belong"
+                                        " to a registered account.")
+        
+        return cleaned_data
+    
+class PasswordForm(forms.Form):
+    email = forms.CharField(widget=forms.HiddenInput)
+    password = forms.CharField(widget=forms.PasswordInput, required=True)
+    repeat_password = forms.CharField(widget=forms.PasswordInput, required=True)
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        if cleaned_data['password'] != cleaned_data['repeat_password']:
+            raise forms.ValidationError("The new passwords entered do not match.")
+        
+        if len(cleaned_data['password']) < 8:
+            raise forms.ValidationError("The password is too short.")
+        
+        if not cleaned_data['password'].isalnum():
+            raise forms.ValidationError("The password must have both alphabetic "
+                                        "and numeric characters.")
+       
+        return cleaned_data
+
 class CustomerCreationForm(UserCreationForm):
     class Meta:
         model = Customer
@@ -37,9 +67,6 @@ class CustomerChangeForm(UserChangeForm):
                 Column('cell_number',
                         'telephone_number', css_class='col-md-6 col-sm-12')
             ),
-            
-            
-
         )
 
         self.helper.add_input(Submit('submit', 'Submit'))

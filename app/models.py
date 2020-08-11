@@ -15,8 +15,8 @@ class ShippingFee(models.Model):
     def __str__(self):
         return "%s: %f%s" %(self.city, self.amount, self.currency)
 
+
 class Customer(AbstractUser):
-    
     email = models.EmailField(unique=True)
     email_verified = models.BooleanField(default=False)
     address_line_1 = models.CharField(max_length=1024, blank=True, default="")
@@ -36,6 +36,7 @@ class Customer(AbstractUser):
     def __str__(self):
         return self.email
         #return "%s %s" % (self.first_name, self.last_name)
+    
     
 #singleton
 class AppSettings(models.Model):
@@ -59,6 +60,7 @@ class AppSettings(models.Model):
         obj, created = cls.objects.get_or_create(pk=1)
         return obj
 
+
 class SKU(models.Model):
     sku_id = models.CharField(max_length=64)
     attribute = models.CharField(max_length=255)
@@ -68,6 +70,7 @@ class SKU(models.Model):
 
     def __str__(self):
         return self.sku_id
+
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
@@ -134,6 +137,7 @@ class Department(models.Model):
     def products(self):
         return Product.objects.filter(category__department = self)
 
+
 class Category(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
@@ -143,6 +147,7 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Order(models.Model):
     STATUS_OPTIONS = [
@@ -170,11 +175,9 @@ class Order(models.Model):
     def __str__(self):
         return "ORD%d" % self.id
 
-
     @property
     def subtotal(self):
         return self.total - self.tax_amount
-
 
     @property
     def tax_amount(self):
@@ -215,3 +218,13 @@ class WishlistItem(models.Model):
 
     def __str__(self):
         return str(self.product)
+
+
+class OutstandingEmailConfirmation(models.Model):
+    user_email = models.EmailField()
+    request_id = models.CharField(max_length=255)
+    
+
+class PasswordRecoveryRequest(models.Model):
+    user_email = models.EmailField()
+    request_id = models.CharField(max_length=255)
