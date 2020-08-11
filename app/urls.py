@@ -25,12 +25,6 @@ urlpatterns = [
     path('remove-from-wishlist/', views.remove_from_wishlist, name='remove-from-wishlist'),
     path('remove-from-cart/', views.remove_from_cart, name='remove-from-cart'),
     path('add-to-cart/', views.add_to_cart, name='add-to-cart'),
-    path('recover-password/', views.PasswordRecovery.as_view(), name='recover-password'),
-    path('sign-up-confirmation/', views.confirm_signup, name='sign-up-confirmation'),
-    path('password-reset/', views.PasswordReset.as_view(), name='password-reset'),
-    path('payment-success/', views.PaymentSuccess.as_view(), name='payment-success'),
-    path('pending-payment/', views.PaymentPending.as_view(), name='pending-payment'),
-    path('checkout/', views.checkout, name='checkout'),
 ]
 
 if settings.DEBUG:
