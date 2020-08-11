@@ -12,9 +12,11 @@ from django.db.models import Q
 import datetime
 from django_filters.views import FilterView
 from app.filters import ProductFilter
-
-
-
+import uuid
+from django.core.mail import send_mail
+from django.contrib.auth.mixins import LoginRequiredMixin
+from paynow import Paynow
+import threading
 # Create your views here.
 class Home(ContextMixin, TemplateView):
     template_name = os.path.join('app', 'index.html')
@@ -28,7 +30,8 @@ class Home(ContextMixin, TemplateView):
         context['best_sellers'] = models.Product.objects.filter(discount__gt=0)
         return context
 
-class ShoppingCartView(ContextMixin, TemplateView):
+
+class ShoppingCartView(ContextMixin, LoginRequiredMixin,TemplateView):
     ctxt = {
         'crumbs': [{'label': 'Cart', 'link': '/cart'}]
     }
@@ -36,8 +39,9 @@ class ShoppingCartView(ContextMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if models.Order.objects.filter(customer=self.request.user, status='cart').exists():
-            context['cart'] = models.Order.objects.get(customer=self.request.user, status='cart')
+        qs = models.Order.objects.filter(customer=self.request.user, status='cart')
+        if qs.exists():
+            context['cart'] = qs.first()
         else:
             context['empty_cart'] = True
         return context
@@ -78,6 +82,7 @@ class DiscountView(ContextMixin, ListView):
     def get_queryset(self):
         return models.Product.objects.filter(discount__gt=0)
 
+
 class FeaturedView(ContextMixin, ListView):
     template_name = os.path.join('app', 'custom.html')
     ctxt = {
@@ -89,7 +94,8 @@ class FeaturedView(ContextMixin, ListView):
 
     def get_queryset(self):
         return models.Product.objects.filter(featured=True)
-        
+  
+      
 class CategoryView(ContextMixin, ProductFilterMixin, FilterView):
     model = models.Category
     template_name = os.path.join('app', 'category.html')
@@ -112,10 +118,12 @@ class CategoryView(ContextMixin, ProductFilterMixin, FilterView):
         return context
 
 
-class WishlistView(ContextMixin, TemplateView):
+class WishlistView(ContextMixin, LoginRequiredMixin,TemplateView):
     ctxt = {
         'crumbs': [{'label': 'Wish List', 'link': '#'}]
     }
+    template_name = os.path.join('app', 'wishlist.html')
+
     def get_context_data(self, **kwargs):
         context =  super().get_context_data(**kwargs)
 
@@ -123,14 +131,6 @@ class WishlistView(ContextMixin, TemplateView):
 
         return context
 
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return super().get(request, *args, **kwargs)
-
-        info(request, "The wishlist is only available to signed in customers")
-        return HttpResponseRedirect('/login')
-
-    template_name = os.path.join('app', 'wishlist.html')
 
 class AccountView(ContextMixin, TemplateView):
     template_name = os.path.join('app', 'account.html')
@@ -163,11 +163,9 @@ class AccountUpdateView(ContextMixin, UpdateView):
         return HttpResponseRedirect(reverse('app:login'))
 
 
-
 class ProductView(ContextMixin, DetailView):
     model = models.Product
     template_name = os.path.join('app', 'product.html')
-
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -189,14 +187,17 @@ class ProductView(ContextMixin, DetailView):
 
         return context
 
+
 class AboutView(ContextMixin, TemplateView):
     ctxt = {
         'crumbs': [{'label': 'About', 'link': '#'}]
     }
     template_name = os.path.join('app', 'about.html')
 
+
 class FAQView(ContextMixin, TemplateView):
     template_name = os.path.join('app', 'faq.html')
+
 
 class LoginView(FormView):
     form_class = forms.LoginForm
@@ -223,14 +224,152 @@ class CustomerCreateView(CreateView):
     success_url = '/login'
     template_name = os.path.join('app', 'sign_up.html')
 
-
     def form_valid(self, form):
         resp = super().form_valid(form)
+        email = form.cleaned_data.get('email')
+        request = models.OutstandingEmailConfirmation.objects.create(
+            user_email = email,
+            request_id = str(uuid.uuid4())
+        )
+        
+        status = send_mail('Account created successfully',
+                  "Welcome to Nomie's collection",
+                  "admin@nomies-collection.com",
+                  [request.user_email],
+                  html_message= """
+                  <p>Thank you for signing up with Nomie's collection</p>
+                  <p>To complete your registration please follow this link to confirm your registration. </p>
+                  <a href="https://nomies-collection.com/sign-up-confirmation/?email={}&id={}">Confirm My Account</a>
+                  """.format(email, request.request_id))
 
-        info(self.request, "User %s created succesfully. Please check your email to validate your account.")
+        if status == 0:
+            info(self.request, "Something went wrong with sending your confirmation email. Please email"
+                 " support@nomies-collection.com for assistance.")    
+        else:
+            info(self.request, "User %s created succesfully. Please check your email to validate your account.")  
 
         return resp
 
+
+class PasswordReset(FormView):
+    template_name = os.path.join('app', 'password_recovery.html')
+    form_class = forms.PasswordForm
+    success_url = "/login"
+    
+    def get_initial(self):
+        return {
+            'email': self.request.GET.get('email')
+        }
+    
+    def get(self, request, *args, **kwargs):
+        qs = models.PasswordRecoveryRequest.objects.filter(
+            user_email= request.GET.get('email'),
+            request_id= request.GET.get('id')
+        )
+        if qs.exists():
+            qs.delete()
+            return super().get(request, *args, **kwargs)
+    
+        info(request, "This password reset information is invalid.")
+        return HttpResponseRedirect(reverse('app:home'))
+
+        
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['message'] = """Enter the new password for your account."""
+        
+        return context
+    
+    def form_valid(self, form):
+        customer = models.Customer.objects.get(
+            email=form.cleaned_data.get('email'))
+        customer.set_password(form.cleaned_data.get('password'))
+        customer.save()
+        
+        return super().form_valid(form)
+        
+
+class PasswordRecovery(FormView):
+    template_name = os.path.join('app', 'password_recovery.html')
+    form_class = forms.EmailForm
+    
+    success_url = "/"
+    
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['message'] = """Enter you email you signed up with below. On submitting you will 
+            receive an email with a link for resetting your password."""
+        
+        return context 
+    
+    def form_valid(self, form):
+        resp = super().form_valid(form)
+        email = form.cleaned_data.get('email')
+        
+        request = models.PasswordRecoveryRequest.objects.create(
+            user_email=email,
+            request_id = str(uuid.uuid4())
+        )
+        
+        status = send_mail('Recover your account',
+                  "Click the link below to set a new account password",
+                  "admin@nomies-collection.com",
+                  [email],
+                  html_message= """
+                  <p>You are seeing this email because you have requested to reset your password</p>
+                  <p>Click the link below to set a new password. </p>
+                  <a href="https://nomies-collection.com/password-reset/?email={}&id={}">Confirm My Account</a>
+                  """.format(email, request.request_id))
+
+        if status == 0:
+            info(self.request, "Something went wrong with sending your request. Please email"
+                 " support@nomies-collection.com for assistance.")    
+        else:
+            info(self.request, "Password reset request sent succesfully. Please check your email to proceed with the process.")  
+      
+        return resp
+    
+
+class PaymentPending(TemplateView):
+    template_name = os.path.join('app', 'pending_payment.html')
+    
+    def get(self, *args, **kwargs):
+        if not self.request.session.get('processing-checkout', None):
+            info(self.request, 'This request is not authorized')
+            return HttpResponseRedirect('/')
+        
+        return super().get(*args, **kwargs)    
+    
+    
+class PaymentSuccess(TemplateView):
+    template_name = os.path.join('app', 'checkout_success.html')
+     
+    def get(self, *args, **kwargs):
+        if not self.request.session.get('processing-checkout', None):
+            info(self.request, 'This request is not authorized')
+            return HttpResponseRedirect('/')
+        
+        self.request.session['processing-checkout'] = False
+        return super().get(*args, **kwargs)
+    
+    
+def confirm_signup(request):
+    qs = models.OutstandingEmailConfirmation.filter(
+        user_email= request.GET.get('email'),
+        request_id= request.GET.get('id')
+    )
+    if qs.exists():
+        email = qs.first().user_email
+        
+        customer = models.Customer.objects.get(email=email)
+        customer.email_verified = True
+        customer.save()
+        
+        qs.delete()
+        return HttpResponseRedirect(reverse('app:login'))
+    
+    info(request, "This email signup information is invalid.")
+    return HttpResponseRedirect(reverse('app:home'))
 
 def add_to_wishlist(request):
     if not request.user.is_authenticated:
@@ -250,7 +389,6 @@ def remove_from_wishlist(request):
     item.delete()
     
     return JsonResponse({'status': 'success'})
-
 
 def remove_from_cart(request):
     item = get_object_or_404(models.OrderItem, pk=request.POST['item'])
@@ -309,6 +447,10 @@ def add_to_cart(request):
 
     return JsonResponse({'status': 'success'})
 
+
+def verify_payment():
+    pass
+
 def search(request):
     #search products
     text = request.GET['text']
@@ -318,6 +460,7 @@ def search(request):
                 Q(description__icontains=text)
             )):
         results.append({'name': res.name, 'link': reverse('app:product', kwargs={'pk': res.pk})})
+    
     #search departments
     for res in models.Department.objects.filter(Q(
                 Q(name__icontains=text) | 
@@ -346,7 +489,41 @@ def get_product_details(request, pk=None):
     })
 
 def checkout(request):
-    pass
+    qs = models.Order.objects.filter(customer=request.user, status='cart')
+    if not qs.exists():
+        info(request, 'You do not have a valid shopping cart. Add some items to your cart to proceed')
+        return HttpResponseRedirect('/')
+    
+    order = qs.first()
+    items = order.orderitem_set.all()
+    
+    if items.count() == 0:
+        info('Your cart is empty')
+        return HttpResponseRedirect('/')
+    
+    request.session['processing-checkout'] = True
+    paynow = Paynow(
+        '',#integration id 
+        '', #integration key
+        'https://nomies-collection.com/cart/',
+        'https://nomies-collection.com/payment-success/?id=%d' % order.pk
+    )
+
+    payment = paynow.create_payment("ORDER%s" % order.pk , request.user.email)
+    
+    for item in items:
+        payment.add(item.item.name, item.subtotal)
+        
+    resp = paynow.send(payment)
+    if resp.success:
+        return HttpResponseRedirect(resp.redirect_url)
+      
+    else:
+        info('An error occurred processing your request, please try again.')
+        return HttpResponseRedirect('/cart')
+    
+    
+
 
 def user_logout(request):
     logout(request)
