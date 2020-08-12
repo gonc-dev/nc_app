@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app',
     'crispy_forms',
-    'background_task'
+    #'background_task'
 ]
 
 MIDDLEWARE = [
