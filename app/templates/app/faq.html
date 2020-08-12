@@ -7,41 +7,27 @@
 
 <section class="faq" id="faq">
     <div class="container view">
-        <div class="row">
-            <h1> Frequently Asked Questions </h1>
-            <hr>   
+        <div class="row mb-5">
+            <h1 > Frequently Asked Questions </h1>
+            <hr >   
         </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card-deck">
+                    {% for faq in faqs %}
 
-        <div class="row">
-            <div class="col faq-row">
-                <h4><a href="#"><i class="fa fa-truck" aria-hidden="true"></a></i> Shipping/Delivery</h4>
-                <p>Some text here</p>
-            </div>
-            <div class="col faq-row">
-                <h4><a href="#"><i class="fa fa-money" aria-hidden="true"></a></i> Payments</h4>
-                <p>Some text here</p>
-            </div>
-            <div class="col faq-row">
-                <h4><a href="#"><i class="fa fa-truck" aria-hidden="true"></a></i> Delivery</h4>
-                <p>Some text here</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col faq-row">
-                <h4><a href="#"><i class="fa fa-heart" aria-hidden="true"></a></i>Promotion</h4>
-                <p>Some text here</p>
-            </div>
-            <div class="col faq-row">
-                <h4><a href="#"><i class="fa fa-info" aria-hidden="true"></a></i> Products</h4>
-                <p>Some text here</p>
-            </div>
-            <div class="col faq-row">
-                <h4><a href="#"><i class="fa fa-comments-o" aria-hidden="true"></a></i> Feedback</h4>
-                <p>Some text here</p>
+                    <div class="card shadow-lg mb-3 ml-3">
+                        <div class="card-body">
+                            <i class=" {{faq.icon}} fa-5x"></i>
+                            <h4 class='h4'>{{faq.name}}</h4>
+                            <p>{{faq.description}}</p>
+                        </div>
+                    </div>
+                
+                {% endfor %}
+                </div>    
             </div>
         </div>
     </div>
-
-
 </section>
 {% endblock contents %}

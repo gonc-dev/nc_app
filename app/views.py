@@ -34,6 +34,13 @@ class ShoppingCartView(ContextMixin, TemplateView):
     }
     template_name = os.path.join('app', 'cart.html')
 
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return super().get(request, *args, **kwargs)
+
+        info(request, "The wishlist is only available to signed in customers")
+        return HttpResponseRedirect('/login')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if models.Order.objects.filter(customer=self.request.user, status='cart').exists():
@@ -197,6 +204,32 @@ class AboutView(ContextMixin, TemplateView):
 
 class FAQView(ContextMixin, TemplateView):
     template_name = os.path.join('app', 'faq.html')
+
+    def get_context_data(self, **kwargs):
+        context= super().get_context_data(**kwargs)
+        context['faqs'] = models.FaqCategory.objects.all()
+        return context
+
+class FAQDetailView(ContextMixin, DetailView):
+    template_name = os.path.join('app', 'faq_info.html')
+    model = models.FaqCategory
+    
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        if not self.object:
+            self.get_object()
+        
+        context['crumbs'] = [
+            {
+                'label': 'FAQ', 
+                'link': reverse('app:faq')
+            },
+         ]
+        
+        
+        context['crumb_title'] = self.object.name
+        
+        return context
 
 class LoginView(FormView):
     form_class = forms.LoginForm

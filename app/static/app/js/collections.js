@@ -217,3 +217,28 @@ function revealNavSearch(){
     }
 
 }
+
+
+// FAQ js
+
+function expandContract(){
+    const el = document.getElementById("expand-contract")
+    el.classList.toggle('expand')
+    el.classList.toggle('collapsed')
+}
+
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+
+for (i = 0; i < coll.length; i++){
+    coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        // var content = this.nextElementSibling;
+        // if (content.style.display === "block"){
+            // content.style.display = "none";
+        // }else {
+            // content.style.display = "block";
+        // }
+    });
+}

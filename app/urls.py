@@ -20,11 +20,13 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path('sign-up/', views.CustomerCreateView.as_view(), name='sign-up'),
     path('faq/', views.FAQView.as_view(), name='faq'),
+    path('faq-detail/<int:pk>', views.FAQDetailView.as_view(), name='faq-detail'),
     path('search/', views.search, name='search'),
     path('add-to-wishlist/', views.add_to_wishlist, name='add-to-wishlist'),
     path('remove-from-wishlist/', views.remove_from_wishlist, name='remove-from-wishlist'),
     path('remove-from-cart/', views.remove_from_cart, name='remove-from-cart'),
     path('add-to-cart/', views.add_to_cart, name='add-to-cart'),
+    
 ]
 
 if settings.DEBUG:

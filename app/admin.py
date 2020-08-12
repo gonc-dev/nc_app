@@ -11,6 +11,8 @@ admin.site.register(Order)
 admin.site.register(OrderItem)
 admin.site.register(Payment)
 admin.site.register(WishlistItem)
+admin.site.register(FaqCategory)
+admin.site.register(FaqItem)
 
 
 

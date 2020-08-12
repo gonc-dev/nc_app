@@ -215,3 +215,24 @@ class WishlistItem(models.Model):
 
     def __str__(self):
         return str(self.product)
+
+
+
+class FaqCategory(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    icon = models.CharField(max_length=64)
+
+    def __str__(self):
+        return str(self.name)
+
+
+class FaqItem(models.Model):
+    question = models.CharField(max_length=256)
+    answer = models.TextField()
+    department = models.ForeignKey('app.FaqCategory', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.question)
+
+
