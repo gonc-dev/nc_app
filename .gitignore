@@ -1,6 +1,7 @@
 db.sqlite3
 media/
-# nomies_collection/settings.py
-# manage.py
+nomies_collection/settings.py
 *.pyc
-*/__pycache__/
+__pycache__/
+env/
+manage.py

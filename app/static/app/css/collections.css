@@ -622,6 +622,17 @@ form.filter-form input[type="text"], form.filter-form input[type="number"] {
     top: 25vh;
 }
 
+.form-card {
+    width: 50vw;
+    margin: 10vh auto;
+}
+
+.form-card-control {
+    display:flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
 /* navigation */
 
 nav {
