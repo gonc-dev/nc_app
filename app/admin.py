@@ -13,6 +13,7 @@ admin.site.register(Payment)
 admin.site.register(WishlistItem)
 admin.site.register(FaqCategory)
 admin.site.register(FaqItem)
+admin.site.register(AppSettings)
 
 
 

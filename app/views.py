@@ -200,8 +200,10 @@ class AboutView(ContextMixin, TemplateView):
         'crumbs': [{'label': 'About', 'link': '#'}]
     }
     template_name = os.path.join('app', 'about.html')
-
-
+    def get_context_data(self, **kwargs):
+        context =  super().get_context_data(**kwargs)
+        context['settings'] = models.AppSettings.objects.first()
+        return context
 class FAQView(ContextMixin, TemplateView):
     template_name = os.path.join('app', 'faq.html')
 

@@ -47,6 +47,14 @@ class AppSettings(models.Model):
     base_currency = models.CharField(max_length=16, default='USD')
     secondary_currency = models.CharField(max_length=16, default='ZWL')
     exchange_rate = models.FloatField(default=1.0)
+    #about page fields
+    about_page_text = models.TextField()
+    about_page_image = models.ImageField(null=True)
+    shop_address = models.TextField()
+    shop_email = models.EmailField(max_length=254)
+    shop_telephone = models.CharField(max_length=254)
+    shop_alternate_telephone = models.CharField(max_length=254, blank=True,default="")
+    shop_gps = models.CharField(max_length=254, blank=True,default="")
 
     def save(self, *args, **kwargs):
         self.pk = 1
