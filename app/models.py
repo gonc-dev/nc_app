@@ -44,9 +44,10 @@ class AppSettings(models.Model):
     promo_message = models.TextField(blank=True, default="")
     show_banner = models.BooleanField(default=False)
     banner_image = models.ImageField()
-    base_currency = models.CharField(max_length=16, default='USD')
-    secondary_currency = models.CharField(max_length=16, default='ZWL')
-    exchange_rate = models.FloatField(default=1.0)
+    default_currency = models.ForeignKey('app.currency', null=True, on_delete=models.SET_NULL)
+    about_image = models.ImageField(null=True)
+    about_info = models.TextField()
+    
 
     def save(self, *args, **kwargs):
         self.pk = 1
@@ -163,7 +164,7 @@ class Order(models.Model):
     status = models.CharField(max_length=32, choices=STATUS_OPTIONS)
     shipping_address = models.TextField(blank=True, default='')
     billing_address  = models.TextField(blank=True, default='')
-    currency = models.CharField(max_length=16, choices=[('USD', 'USD'), ('ZWL', 'ZWL')])
+    currency = models.ForeignKey('app.Currency', on_delete=models.CASCADE)
     shipping_cost = models.DecimalField(decimal_places=2, max_digits=24)
     tax = models.DecimalField(decimal_places=2, max_digits=24, default=14.5, )
 
@@ -202,7 +203,7 @@ class Payment(models.Model):
     payment_id = models.CharField(max_length=255)
     amount = models.DecimalField(decimal_places=2, max_digits=24)
     method = models.CharField(max_length=32)
-    currency = models.CharField(max_length=16)
+    currency = models.ForeignKey('app.Currency', on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now=True)
     order = models.ForeignKey('app.Order', on_delete=models.CASCADE)
 
@@ -247,3 +248,23 @@ class OutstandingEmailConfirmation(models.Model):
 class PasswordRecoveryRequest(models.Model):
     user_email = models.EmailField()
     request_id = models.CharField(max_length=255)
+
+
+class Currency(models.Model):
+    name = models.CharField(max_length=64)
+    symbol = models.CharField(max_length=3)
+    
+
+    def __str__(self):
+        return str(self.name)
+
+
+# So @Caleb Kandoro now we need to make the tamplte that will allow for changes to the different currencies right?
+class CurrencyExchange(models.Model):
+    from_currency = models.ForeignKey('app.Currency', on_delete=models.CASCADE)
+    to_currrency = models.ForeignKey('app.Currency', on_delete=models.CASCADE, related_name='from_currency')
+    date = models.DateField()
+    rate = models.DecimalField(max_digits=16, decimal_places=12)
+
+
+

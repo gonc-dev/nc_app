@@ -110,7 +110,6 @@ class ProductFilterMixin(object):
         
         self.paginator = paginator
         self.page = qs
-        print(dir(qs))
         return qs.object_list
 
     def update_context(self, context):
