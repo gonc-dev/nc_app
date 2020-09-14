@@ -1,6 +1,9 @@
 from django.contrib import admin
 from app.models import *
 # Register your models here.
+
+admin.site.site_header = "Nomie's Collection"
+
 admin.site.register(Customer)
 admin.site.register(Product)
 admin.site.register(ProductImage)

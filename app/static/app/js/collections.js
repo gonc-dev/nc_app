@@ -16,6 +16,25 @@ $.ajaxSetup({
     }
 });
 
+
+$(document).ready(function(){
+    console.log('ready')
+    $('.nc-currency-tab-links li').click(function(evt) {
+        $.ajax({
+            method: 'GET',
+            url: '/set-currency',
+            data: {
+                value: $(evt.currentTarget).data('currency')
+            },
+            success: function() {
+                console.log('success')
+                window.location.reload(true)
+
+            }
+        })
+    })
+})
+
 function search(element, results){
     if($('#' + element).length > 0){
         $('#' + element).on('change keyup paste', function(){

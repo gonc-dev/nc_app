@@ -1,3 +1,6 @@
+{% load app_tags %}
+
+
 <div class="card product-card">
     <div class='card-top'>
         <img class="card-img-top" src="{{product.primary_photo_url}}" alt="Product Image">
@@ -8,11 +11,11 @@
     <div class="card-body">
         <h5 class="card-title"><a href="{% url 'app:product' pk=product.pk %}">{{product}}</a></h5>
         {% if product.discount > 0 %}
-        <p class="card-text "><span class="old-price">{{currency}}{{product.unit_price}}</span>
+        <p class="card-text "><span class="old-price">{{currency}}{{product.unit_price | currency:request.session.currency}}</span>
             <br>
-        <strong class='new-price'>{{currency}}{{product.discounted_price}} <sup>{{product.discount |stringformat:"d"}}% OFF!</sup></strong></p>
+        <strong class='new-price'>{{currency}}{{product.discounted_price | currency:request.session.currency}} <sup>{{product.discount |stringformat:"d"}}% OFF!</sup></strong></p>
         {% else %}
-        <p class="card-text">{{currency}}{{product.unit_price}}</p>
+        <p class="card-text">{{currency}}{{product.unit_price | currency:request.session.currency}}</p>
         {% endif %}
         <button class="btn btn-info" onclick='openAddToCart({{product.pk}})'> <i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to Cart</button>
     </div>

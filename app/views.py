@@ -486,6 +486,8 @@ def verify_payment():
 def search(request):
     #search products
     text = request.GET['text']
+    print(request)
+    print(request.session)
     results = []
     for res in models.Product.objects.filter(Q(
                 Q(name__icontains=text) | 
@@ -560,3 +562,19 @@ def checkout(request):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/login/')
+
+def set_currency(request):
+    request.session['currency'] = request.GET['value']
+    return JsonResponse({})
+
+# def currency(price, currency):
+#     default = models.AppSettings.objects.first.baseUcrrency
+#     if currency == default 
+#         return price
+
+#     qs = models.CurrencyExchange.objects.filter(from_currency = default, to_currency=currency).order_by('date')
+#     if qs.exsits():
+#         exchange = qs.first()
+#         return price * exchange.rate
+
+#     return 0

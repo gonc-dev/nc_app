@@ -778,6 +778,43 @@ nav a {
     padding: 5px;
 }
 
+
+.nc-currency-tab-links{
+    margin-bottom:0;
+    margin-left: 0;
+    display: flex;
+    width:60%;
+    display: inline-block;
+
+    
+}
+
+.currency-tab {
+    cursor: pointer;
+    padding: 10px;;
+}
+
+.currency-tab:hover {
+    background: var(--tertiary);
+    color: var(--text-color);
+    text-decoration: underline;
+}
+
+.nc-currency-tab-links li{
+    margin: 0px 5px;
+    list-style: none;
+    background-color: white;
+    color: steelblue;
+}
+
+.nc-currency-tab-links li.active {
+    background-color: steelblue;
+    color: white;
+}
+
+
+
+
 .breadcrumbs a {
     color: steelblue;
     text-decoration: none;

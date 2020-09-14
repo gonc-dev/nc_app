@@ -33,6 +33,10 @@
                 <li> <a href="/wishlist">WISHLIST - <span id='wishlist-count'>{{wishlist_count}}</span></a> </li>
                 <li><a href="/cart"><i class="fa fa-shopping-bag" aria-hidden="true"></i> <span id='cart-count' class="badge badge-primary">{{cart_count}}</span></a></li>
             </ul>
+            <ul class="nc-currency-tab-links">
+                <li data-currency="USD" class=" currency-tab {% if request.session.currency and request.session.currency == 'USD' %}active{% endif %}">USD</li>
+                <li data-currency="ZWL" class=" currency-tab {% if request.session.currency and request.session.currency == 'ZWL' %}active{% endif %}">ZWL</li>
+            </ul>
         </div>
         <div id="nc-nav-button">
             <i class="fa fa-bars" aria-hidden="true"></i>
