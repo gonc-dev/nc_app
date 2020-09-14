@@ -45,9 +45,14 @@ class AppSettings(models.Model):
     show_banner = models.BooleanField(default=False)
     banner_image = models.ImageField()
     default_currency = models.ForeignKey('app.currency', null=True, on_delete=models.SET_NULL)
-    about_image = models.ImageField(null=True)
-    about_info = models.TextField()
-    
+    #about page fields
+    about_page_text = models.TextField()
+    about_page_image = models.ImageField(null=True)
+    shop_address = models.TextField()
+    shop_email = models.EmailField(max_length=254)
+    shop_telephone = models.CharField(max_length=254)
+    shop_alternate_telephone = models.CharField(max_length=254, blank=True,default="")
+    shop_gps = models.CharField(max_length=254, blank=True,default="")
 
     def save(self, *args, **kwargs):
         self.pk = 1
