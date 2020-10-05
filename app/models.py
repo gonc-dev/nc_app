@@ -65,6 +65,9 @@ class AppSettings(models.Model):
     def load(cls):
         obj, created = cls.objects.get_or_create(pk=1)
         return obj
+    
+    class Meta:
+        verbose_name_plural = "AppSettings"
 
 
 class SKU(models.Model):
@@ -154,6 +157,9 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = "Categories"
+
 
 class Order(models.Model):
     STATUS_OPTIONS = [
@@ -235,6 +241,9 @@ class FaqCategory(models.Model):
     def __str__(self):
         return str(self.name)
 
+    class Meta:
+        verbose_name_plural = "Faq Categories"
+
 
 class FaqItem(models.Model):
     question = models.CharField(max_length=256)
@@ -258,10 +267,12 @@ class PasswordRecoveryRequest(models.Model):
 class Currency(models.Model):
     name = models.CharField(max_length=64)
     symbol = models.CharField(max_length=3)
+
+    class Meta:
+        verbose_name_plural = "Currencies"
     
 
-    def __str__(self):
-        return str(self.name)
+
 
 
 # So @Caleb Kandoro now we need to make the tamplte that will allow for changes to the different currencies right?
@@ -269,7 +280,10 @@ class CurrencyExchange(models.Model):
     from_currency = models.ForeignKey('app.Currency', on_delete=models.CASCADE)
     to_currency = models.ForeignKey('app.Currency', on_delete=models.CASCADE, related_name='from_currency')
     date = models.DateField()
-    rate = models.DecimalField(max_digits=16, decimal_places=12)
+    rate = models.DecimalField(max_digits=16, decimal_places=2)
+
+    class Meta:
+        verbose_name_plural = "Currency Exchange"
 
 
 

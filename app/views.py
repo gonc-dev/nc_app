@@ -6,7 +6,7 @@ from app.utils import ContextMixin, ProductFilterMixin
 from app import forms
 from django.contrib.messages import info
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse,HttpResponse
 from app.backends import EmailAuthBackend
 from django.db.models import Q
 import datetime
@@ -168,6 +168,24 @@ class AccountUpdateView(ContextMixin, UpdateView):
             return super().get(request, *args, **kwargs)
 
         return HttpResponseRedirect(reverse('app:login'))
+
+
+# def order_view(request, pk=None):
+#     order = get_object_or_404(models.Order, pk=pk)
+#     template = os.path.join('app', 'invoice.html')
+#     return HttpResponse(render(request,template, context={'object': order}))
+
+class OrderView(DetailView):
+    model = models.Order
+    # template_name = os.path.join ('app', 'invoice.html')
+
+    def get_context_data(self, *args, **kwargs): 
+        context = super(OrderView, 
+             self).get_context_data(*args, **kwargs) 
+        context["settings"] = models.AppSettings.objects.first()        
+        return context 
+        
+
 
 
 class ProductView(ContextMixin, DetailView):
@@ -439,11 +457,17 @@ def remove_from_cart(request):
         })
 
 def add_to_cart(request):
+    
     if not request.user.is_authenticated:
         return JsonResponse({'status': 'error'})
 
+    if not request.session.get('currency'):
+        request.session['currency'] = models.AppSettings.objects.first().default_currency.symbol
+
     product = get_object_or_404(models.Product, pk=request.POST['product'])
     orders = models.Order.objects.filter(customer=request.user, status='cart')
+    currency = models.Currency.objects.get(symbol=request.session.get('currency'))
+    print(currency)
     
     
     if orders.exists():
@@ -453,7 +477,9 @@ def add_to_cart(request):
             customer=request.user, 
             status='cart',
             date=datetime.date.today(),
-            shipping_cost=0
+            shipping_cost=0,
+            currency = currency,
+            
         )
 
     sku = models.SKU.objects.get(pk=request.POST['sku'])
@@ -488,8 +514,6 @@ def verify_payment():
 def search(request):
     #search products
     text = request.GET['text']
-    print(request)
-    print(request.session)
     results = []
     for res in models.Product.objects.filter(Q(
                 Q(name__icontains=text) | 
@@ -534,7 +558,7 @@ def checkout(request):
     items = order.orderitem_set.all()
     
     if items.count() == 0:
-        info('Your cart is empty')
+        info(request,'Your cart is empty')
         return HttpResponseRedirect('/')
     
     request.session['processing-checkout'] = True
@@ -555,7 +579,7 @@ def checkout(request):
         return HttpResponseRedirect(resp.redirect_url)
       
     else:
-        info('An error occurred processing your request, please try again.')
+        info(request,'An error occurred processing your request, please try again.')
         return HttpResponseRedirect('/cart')
     
     

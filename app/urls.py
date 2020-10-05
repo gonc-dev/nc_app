@@ -32,7 +32,8 @@ urlpatterns = [
     path('payment-success/', views.PaymentSuccess.as_view(), name='payment-success'),
     path('pending-payment/', views.PaymentPending.as_view(), name='pending-payment'),
     path('checkout/', views.checkout, name='checkout'),
-    path('set-currency', views.set_currency, name="set-currency"),
+    path('set-currency', views.set_currency, name='set-currency'),
+    path('order-view/<int:pk>/', views.OrderView.as_view(), name='order-view'),
 ]
 
 if settings.DEBUG:

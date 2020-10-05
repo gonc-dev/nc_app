@@ -54,6 +54,19 @@ class ViewTests(TestCase):
             department=cls.dept
         )
 
+        cls.currency = models.Currency.objects.create (
+            name = 'USD',
+            symbol = '$'
+        )
+
+        cls.settings = models.AppSettings.objects.create(
+            promo_title = 'buy one for more',
+            about_page_text = 'this is more',
+            shop_address = 'corner of that street',
+            default_currency = cls.currency,
+            
+        )
+
     def setUp(self):
         self.client.login(username="user", password='123')
 
@@ -181,6 +194,10 @@ class ViewTests(TestCase):
     def test_pending_payment(self):
         resp = self.client.get(reverse('app:pending-payment'))
         self.assertEqual(resp.status_code, 302)
+
+    # def test_order_view(self):
+    #     resp = self.client.get(reverse('app:order-view'))
+    #     self.assertEqual(resp.status_code, 200)
 
 
     def test_password_reset(self):

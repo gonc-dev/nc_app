@@ -13,8 +13,7 @@ def currency(price, currency):
     if currency == default:
         return  "%.2f" % price
 
-    print(default)
-    print(currency)
+    
     from_ = models.Currency.objects.get(symbol=default)
     to = models.Currency.objects.get(symbol=currency)
     qs = models.CurrencyExchange.objects.filter(from_currency=from_, to_currency=to).order_by('date')

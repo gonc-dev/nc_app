@@ -13,7 +13,9 @@ class ContextMixin(object):
         context = super().get_context_data(**kwargs)
         context.update(self.ctxt)
         context['departments'] =Department.objects.all()
-        context['currency'] =self.request.session.get('currency', '$')
+        if not self.request.session.get('currency'):
+            self.request.session['currency'] = models.AppSettings.objects.first().default_currency.symbol
+        context['currency'] =self.request.session.get('currency')
         if self.ctxt.get('crumbs'):
             context['crumb_title'] = self.ctxt['crumbs'][-1]['label']
 

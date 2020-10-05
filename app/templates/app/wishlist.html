@@ -1,4 +1,5 @@
 {% extends 'window.html' %}
+{% load app_tags %}
 
 
 {% block contents %}
@@ -19,11 +20,11 @@
                     <h4>{{product.product}}</h4>
                     <p><i class="fa fa-calendar-o" aria-hidden="true"></i> {{product.date_added}} </p>
                     {% if product.product.discount > 0 %}
-                    <p class="card-text "><span class="old-price">{{currency}}{{product.product.unit_price}}</span>
+                    <p class="card-text "><span class="old-price">{{currency}}{{product.product.unit_price | currency:request.session.currency}}</span>
                         <br>
-                    <strong class='new-price'>{{currency}}{{product.product.discounted_price}} <sup>{{product.product.discount}}% OFF!</sup></strong></p>
+                    <strong class='new-price'>{{currency}}{{product.product.discounted_price | currency:request.session.currency}} <sup>{{product.product.discount}}% OFF!</sup></strong></p>
                     {% else %}
-                    <p class="card-text">{{currency}}{{product.product.unit_price}}</p>
+                    <p class="card-text">{{currency}}{{product.product.unit_price | currency:request.session.currency}}</p>
                     {% endif %}
 
                 </div>
@@ -41,3 +42,5 @@
     </div>
 </div>
 {% endblock contents %}
+
+{% comment %} wishlist view with contextmixin {% endcomment %}
