@@ -929,8 +929,13 @@ nav a {
 .collapsible-content p{
     margin: 20px 18px;
     overflow-y: auto;
-    
+    background-color: var(--background-color);
+    padding: 20px 18px;
 }
+ .faq_question {
+     font-size: 1.25rem;
+     font-weight: 500;
+ }
 .fa-caret-left{
     float:right;
     padding-right: 20px;
@@ -941,14 +946,17 @@ nav a {
 }
 
 .collapsible i {
-    transition: all 0.25s linear;
+    transition: all 0.15s linear;
 }
 
 .active .collapsible-content {
     /* display: block; */
     height:200px;
+}
 
-
+.faq_styling{
+    text-decoration: none;
+    color: black;
 }
 /* modal */
 #message-modal {

@@ -18,8 +18,8 @@
 
                     <div class="card shadow-lg mb-3 ml-3">
                         <div class="card-body">
-                            <i class=" {{faq.icon}} fa-5x"></i>
-                            <h4 class='h4'>{{faq.name}}</h4>
+                            <a class="faq_styling" href="{% url 'app:faq-detail' pk=faq.pk%}"><i class="{{faq.icon}} fa-5x"></a></i>
+                            <h4 class='h4'><a class="faq_styling" href="{% url 'app:faq-detail' pk=faq.pk%}">{{faq.name}}</h4></a>
                             <p>{{faq.description}}</p>
                         </div>
                     </div>

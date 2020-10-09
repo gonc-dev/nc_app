@@ -10,7 +10,7 @@
             {% for q in object.faqitem_set.all %}
             <div class="collapsible">
                 <button type="button">
-                    <h5>{{q.question}}</h5>
+                    <h5><p class="faq_question">{{q.question}}</h5></p>
                     <i class="fa fa-caret-left fa-2x" aria-hidden="true"></i>
                 </button>
                 <div class="collapsible-content">

@@ -272,10 +272,6 @@ class Currency(models.Model):
         verbose_name_plural = "Currencies"
     
 
-
-
-
-# So @Caleb Kandoro now we need to make the tamplte that will allow for changes to the different currencies right?
 class CurrencyExchange(models.Model):
     from_currency = models.ForeignKey('app.Currency', on_delete=models.CASCADE)
     to_currency = models.ForeignKey('app.Currency', on_delete=models.CASCADE, related_name='from_currency')
